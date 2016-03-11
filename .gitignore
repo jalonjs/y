@@ -1,0 +1,9 @@
+node_modules
+.idea
+client/bower_components
+dist
+npm-debug.log
+.dist
+.sass-cache
+.temp
+.DS_Store
