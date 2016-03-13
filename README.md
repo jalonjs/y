@@ -13,6 +13,7 @@
 ```
 git clone https://github.com/jalonjs/y.git
 ```
+- ```cd y```
 - npm install
 - bower install
 
