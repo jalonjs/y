@@ -49,11 +49,15 @@ gulp.task('clean', function (cb) {
 });
 
 //  把css js引入到页面 (app bower)
-gulp.task('add', function () {
+gulp.task('add', ['styles', 'js'], function () {
     var target = gulp.src('./client/index.html');
     target
         .pipe(wiredep())
-        .pipe(inject(gulp.src(['./client/app/**/*.js', './client/app/**/*.css'], {read: false}), {
+        .pipe(inject(gulp.src([
+            './client/**/*.js',
+            './client/**/*.css',
+            '!./client/bower_components/**/*.js'
+        ], {read: false}), {
             transform: function (filepath) {
                 var ext = filepath.split('.').splice(-1)[0];
                 if (ext == 'js') {
@@ -71,7 +75,7 @@ gulp.task('add', function () {
 
 
 //  把html引用的css和js压缩到目标文件压缩并引用 放到dist
-gulp.task('usemin', ['styles', 'add', 'js', 'static'], function () {
+gulp.task('usemin', ['add', 'static'], function () {
     return gulp.src('./client/index.html')
         .pipe($.usemin({
             cssVendor: [$.minifyCss(), $.rev()],
@@ -91,4 +95,4 @@ gulp.task('watch', function () {
 gulp.task('dist', ['usemin'], function () {
     return gulp.src('./server/**/*')
         .pipe(gulp.dest('./dist/server'));
-})
+});

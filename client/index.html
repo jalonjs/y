@@ -22,6 +22,7 @@
     <!-- build:cssApp app.css -->
     <!-- inject:css -->
     <link rel="stylesheet" href="app/feed/feed.css">
+    <link rel="stylesheet" href="bower_components/angular/angular-csp.css">
     <!-- endinject -->
     <!-- endbuild -->
 </head>
@@ -43,20 +44,14 @@
 <!-- endbower -->
 <!-- endbuild -->
 
-
+<script src="/socket.io/socket.io.js"></script>
 <!-- build:jsApp app.js -->
 <!-- inject:js -->
 <script src="app/app.js"></script>
 <script src="app/router.js"></script>
+<script src="service/socket.js"></script>
 <script src="app/feed/feed.controller.js"></script>
 <!-- endinject -->
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    var socket = io('http://localhost:3000');
-    socket.on('start', function (data) {
-        socket.emit('myEvent', { data: 'I am jalon' });
-    });
-</script>
 <!-- endbuild -->
 </body>
 </html>

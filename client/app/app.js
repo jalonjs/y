@@ -12,4 +12,7 @@ angular.module('yApp', [
         function ($locationProvider, $urlMatcherFactoryProvider) {
             $urlMatcherFactoryProvider.strictMode(false);
             $locationProvider.html5Mode(true);
-        }]);
+        }]).run(function () {
+
+
+});

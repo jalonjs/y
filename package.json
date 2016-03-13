@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./server/bin/www",
     "dev": "gulp add & gulp watch & node ./server/bin/www",
-    "prod": "gulp clean & gulp dist & node ./dist/server/app.js"
+    "prod": "gulp clean & gulp dist & node ./dist/server/bin/www"
   },
   "author": "jalon",
   "license": "ISC",
