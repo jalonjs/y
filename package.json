@@ -4,9 +4,8 @@
   "description": "y",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./server/bin/www",
-    "dev": "gulp add & gulp watch & node ./server/bin/www",
-    "prod": "gulp clean & gulp dist & node ./dist/server/bin/www"
+    "dev": "gulp add && gulp watch & node ./server/bin/www",
+    "prod": "rm -rf ./dist && gulp dist && node ./dist/server/bin/www && open http://localhost:3000"
   },
   "author": "jalon",
   "license": "ISC",
@@ -21,8 +20,10 @@
     "socket.io": "^1.4.5"
   },
   "devDependencies": {
+    "browser-sync": "^2.11.1",
     "del": "^2.2.0",
     "gulp": "^3.9.1",
+    "gulp-angular-templates": "0.0.2",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-cache": "^0.4.2",
     "gulp-clean": "^0.3.2",

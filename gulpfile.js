@@ -13,7 +13,9 @@ var concat = require('gulp-concat');
 var rev = require('gulp-rev');
 var clean = require('gulp-clean');
 var watch = require('gulp-watch');
+var angularTemplates = require('gulp-angular-templates');
 var exec = require('child_process').exec;
+var browserSync = require('browser-sync').create();
 
 // 把sass编译成css(在当前文件夹)
 var scssSrc = './client/**/*.scss',
@@ -41,22 +43,31 @@ gulp.task('static', function () {
         .pipe(gulp.dest(staticDst));
 })
 
-// 清空图片、样式、js
-gulp.task('clean', function (cb) {
-    gulp.src(['./dist/**'], {read: false})
-        .pipe(clean({force: true}));
-    cb();
+
+// 把html模板打包
+gulp.task('templates', function () {
+    return gulp.src(['./client/app/**/*.html', './client/widgets/**/*.html'])
+        .pipe(angularTemplates({module: 'yApp', basePath: 'app/'}))
+        .pipe(gulp.dest('.temp/templates'));
 });
 
+gulp.task('html', ['templates'], function () {
+    return gulp.src('.temp/templates/**/*.js')
+        .pipe(concat('templates.js'))
+        .pipe(uglify())
+        .pipe(gulp.dest('./client/templates/'));
+});
+
+
 //  把css js引入到页面 (app bower)
-gulp.task('add', ['styles', 'js'], function () {
+gulp.task('add', ['styles', 'js', 'html'], function () {
     var target = gulp.src('./client/index.html');
     target
         .pipe(wiredep())
         .pipe(inject(gulp.src([
             './client/**/*.js',
-            './client/**/*.css',
-            '!./client/bower_components/**/*.js'
+            '!./client/bower_components/**/*.js',
+            './client/**/*.css'
         ], {read: false}), {
             transform: function (filepath) {
                 var ext = filepath.split('.').splice(-1)[0];
@@ -71,8 +82,7 @@ gulp.task('add', ['styles', 'js'], function () {
             }
         }))
         .pipe(gulp.dest('./client'));
-})
-
+});
 
 //  把html引用的css和js压缩到目标文件压缩并引用 放到dist
 gulp.task('usemin', ['add', 'static'], function () {
@@ -88,11 +98,16 @@ gulp.task('usemin', ['add', 'static'], function () {
 
 // 监听任务
 gulp.task('watch', function () {
+    browserSync.init({
+        proxy: 'localhost:3000',
+        files: ['./**/*.{js,css,html}']
+    });
+
     gulp.watch('client/**/*', ['styles', 'add']);
 });
 
 // dist
 gulp.task('dist', ['usemin'], function () {
-    return gulp.src('./server/**/*')
+    gulp.src('./server/**/*')
         .pipe(gulp.dest('./dist/server'));
 });

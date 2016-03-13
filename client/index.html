@@ -1,12 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]>
-<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>
-<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>
-<html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html ng-app="yApp" class="no-js"> <!--<![endif]-->
+<html ng-app="yApp">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,9 +20,10 @@
     <!-- endbuild -->
 </head>
 <body>
-
-<div ui-view=""></div>
-
+<div class="app-content">
+    <div ui-view></div>
+</div>
+</body>
 <!-- build:jsVendor vendor.js -->
 <!-- bower:js -->
 <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -49,9 +43,10 @@
 <!-- inject:js -->
 <script src="app/app.js"></script>
 <script src="app/router.js"></script>
-<script src="service/socket.js"></script>
+<script src="templates/templates.js"></script>
 <script src="app/feed/feed.controller.js"></script>
+<script src="widgets/socket/socket.js"></script>
+<script src="app/feed/ccc/c.controller.js"></script>
 <!-- endinject -->
 <!-- endbuild -->
-</body>
 </html>
