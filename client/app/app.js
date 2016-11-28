@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('yApp', [
+angular.module('h5editorMis', [
         'ngAnimate',
         'ngCookies',
         'ngResource',

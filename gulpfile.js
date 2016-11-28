@@ -20,19 +20,18 @@ var browserSync = require('browser-sync').create();
 // 把sass编译成css(在当前文件夹)
 var scssSrc = './client/**/*.scss',
     cssDst = './dist/client/app';
-
 gulp.task('styles', function () {
     gulp.src(scssSrc)
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('./client'))
 });
 
-var jsSrc = './client/app/**/*.js';
-gulp.task('js', function () {
-    gulp.src(jsSrc)
-        .pipe(jshint())       // 进行检查
-        .pipe(jshint.reporter('default'));
-});
+// var jsSrc = './client/app/**/*.js';
+// gulp.task('js', function () {
+//     gulp.src(jsSrc)
+//         .pipe(jshint())       // 进行检查
+//         .pipe(jshint.reporter('default'));
+// });
 
 // 图片压缩
 gulp.task('static', function () {
@@ -47,10 +46,11 @@ gulp.task('static', function () {
 // 把html模板打包
 gulp.task('templates', function () {
     return gulp.src(['./client/app/**/*.html', './client/widgets/**/*.html'])
-        .pipe(angularTemplates({module: 'yApp', basePath: 'app/'}))
+        .pipe(angularTemplates({module: 'h5editorMis', basePath: 'app/'}))
         .pipe(gulp.dest('.temp/templates'));
 });
 
+// 把html转为js缓存模板
 gulp.task('html', ['templates'], function () {
     return gulp.src('.temp/templates/**/*.js')
         .pipe(concat('templates.js'))
@@ -58,9 +58,8 @@ gulp.task('html', ['templates'], function () {
         .pipe(gulp.dest('./client/templates/'));
 });
 
-
-//  把css js引入到页面 (app bower)
-gulp.task('add', ['styles', 'js', 'html'], function () {
+//  把css js引入到页面 (app&&bower)
+gulp.task('inject', function () {
     var target = gulp.src('./client/index.html');
     target
         .pipe(wiredep())
@@ -84,8 +83,9 @@ gulp.task('add', ['styles', 'js', 'html'], function () {
         .pipe(gulp.dest('./client'));
 });
 
+
 //  把html引用的css和js压缩到目标文件压缩并引用 放到dist
-gulp.task('usemin', ['add', 'static'], function () {
+gulp.task('usemin', ['operateAndInject', 'static'], function () {
     return gulp.src('./client/index.html')
         .pipe($.usemin({
             cssVendor: [$.minifyCss(), $.rev()],
@@ -96,6 +96,12 @@ gulp.task('usemin', ['add', 'static'], function () {
         .pipe(gulp.dest('dist/client'));
 });
 
+// 将最后上线需要的文件输出到dist文件夹
+gulp.task('dist', ['usemin'], function () {
+    gulp.src('./server/**/*')
+        .pipe(gulp.dest('./dist/server'));
+});
+
 // 监听任务
 gulp.task('watch', function () {
     browserSync.init({
@@ -103,11 +109,23 @@ gulp.task('watch', function () {
         files: ['./**/*.{js,css,html}']
     });
 
-    gulp.watch('client/**/*', ['styles', 'add']);
+    var cssWatcher = gulp.watch([
+        '!./client/bower_components/**/*.css',
+        './client/**/*.scss'
+    ], ['styles', 'inject']);
+
+    var jsWatcher = gulp.watch([
+        '!./client/bower_components/**/*.js',
+        './client/**/*.js'
+    ], ['inject']);
+
+    var htmlWatcher = gulp.watch([
+        '!./client/bower_components/**/*.html',
+        './client/**/*.html'
+    ], ['html', 'inject']);
+
 });
 
-// dist
-gulp.task('dist', ['usemin'], function () {
-    gulp.src('./server/**/*')
-        .pipe(gulp.dest('./dist/server'));
+gulp.task('default', ['styles', 'html'], function () {
+    gulp.run('inject');
 });

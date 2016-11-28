@@ -1,13 +1,13 @@
 {
-  "name": "y",
+  "name": "h5editorMis",
   "version": "0.0.1",
-  "description": "y",
+  "description": "h5editor mis系统",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "gulp add && gulp watch & node ./server/bin/www",
+    "dev": "gulp && gulp watch & node ./server/bin/www",
     "prod": "rm -rf ./dist && gulp dist && node ./dist/server/bin/www && open http://localhost:3000"
   },
-  "author": "jalon",
+  "author": "jalon|824525504@qq.com",
   "license": "ISC",
   "dependencies": {
     "body-parser": "~1.13.2",
