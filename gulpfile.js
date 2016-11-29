@@ -26,12 +26,12 @@ gulp.task('styles', function () {
         .pipe(gulp.dest('./client'))
 });
 
-// var jsSrc = './client/app/**/*.js';
-// gulp.task('js', function () {
-//     gulp.src(jsSrc)
-//         .pipe(jshint())       // 进行检查
-//         .pipe(jshint.reporter('default'));
-// });
+var jsSrc = './client/app/**/*.js';
+gulp.task('js', function () {
+    gulp.src(jsSrc)
+        .pipe(jshint())       // 进行检查
+        .pipe(jshint.reporter('default'));
+});
 
 // 图片压缩
 gulp.task('static', function () {
@@ -65,8 +65,9 @@ gulp.task('inject', function () {
         .pipe(wiredep())
         .pipe(inject(gulp.src([
             './client/**/*.js',
-            '!./client/bower_components/**/*.js',
-            './client/**/*.css'
+            './client/**/*.css',
+            '!./client/bower_components/**/*.css',
+            '!./client/bower_components/**/*.js'
         ], {read: false}), {
             transform: function (filepath) {
                 var ext = filepath.split('.').splice(-1)[0];
@@ -85,7 +86,7 @@ gulp.task('inject', function () {
 
 
 //  把html引用的css和js压缩到目标文件压缩并引用 放到dist
-gulp.task('usemin', ['operateAndInject', 'static'], function () {
+gulp.task('usemin', ['default', 'static'], function () {
     return gulp.src('./client/index.html')
         .pipe($.usemin({
             cssVendor: [$.minifyCss(), $.rev()],
